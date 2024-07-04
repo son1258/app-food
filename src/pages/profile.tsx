@@ -1,35 +1,33 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Avatar from "../assets/avatar.jpg";
 import Tablet from "../assets/tabler_edit.jpg";
-
-
+import { PersionalInfo, ContactPersionalInfo, handleInputChangeInfo} from "../interfaces/persionalInfo";
 
 function Profile() {
     const [isEditing, setIsEditing] = useState(false);
-    const [persionalInfo, setPersionalInfo] = useState({
+    const handleEditClick = () => {
+        setIsEditing(!isEditing);
+    } 
+    const [personalInfo, setPersonalInfo] = useState<PersionalInfo>({
         name: "Joyce Johnson",
         occupation: "Manager",
         employer: "Food Couriers",
         country: "Nigeria"
     })
-
-    const [contactInfo, setContactInfo] = useState({
+    
+    const [contactInfo, setContactInfo] = useState<ContactPersionalInfo>({
         phone: "+234 813 0400 445",
         email: "ekamcy@mail.com",
     })
     
-    const handleEditClick = () => {
-        setIsEditing(!isEditing);
-    } 
-
-    const handleInputChange = (e) => {
-        const {name, value} = e.target;
-        if(persionalInfo.hasOwnProperty(name)){
-            setPersionalInfo({...persionalInfo, [name]: value});
-        }else if (contactInfo.hasOwnProperty(name)){
-            setContactInfo({...contactInfo, [name]: value});
-        }
+    const handlePersonalInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        handleInputChangeInfo(e, personalInfo, setPersonalInfo);
     };
+    
+    const handleContactInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        handleInputChangeInfo(e, contactInfo, setContactInfo);
+    };
+
     return (
         <div className="sm:hidden sm:h-full font-[Poppins]">
             <div className="clear-both mt-[9px] mx-[33px]">
@@ -55,12 +53,12 @@ function Profile() {
                                 <input 
                                     type="text"
                                     name="name"
-                                    value={persionalInfo.name}
-                                    onChange={handleInputChange}
+                                    value={personalInfo.name}
+                                    onChange={(e) => handlePersonalInputChange}
                                     className="float-right w-24"
 
                                 /> 
-                            ) : (<p className="float-right">{persionalInfo.name}</p>)}
+                            ) : (<p className="float-right">{personalInfo.name}</p>)}
                         </div>
                         <div className="w-full py-[13.5px]">
                             <p className="float-left">Occupation</p>
@@ -68,11 +66,11 @@ function Profile() {
                                 <input 
                                     type="text"
                                     name="occupation"
-                                    value={persionalInfo.occupation}
-                                    onChange={handleInputChange}
+                                    value={personalInfo.occupation}
+                                    onChange={(e) => handlePersonalInputChange}
                                     className="float-right w-24"
                                 />
-                            ) : (<p className="float-right">{persionalInfo.occupation}</p>)}
+                            ) : (<p className="float-right">{personalInfo.occupation}</p>)}
                         </div>
                         <div className="w-full py-[13.5px]">
                             <p className="float-left">Employer</p>
@@ -80,11 +78,11 @@ function Profile() {
                                 <input 
                                     type="text"
                                     name="employer"
-                                    value={persionalInfo.employer}
-                                    onChange={handleInputChange}
+                                    value={personalInfo.employer}
+                                    onChange={(e) => handlePersonalInputChange}
                                     className="float-right w-24"
                                 />
-                            ) : ( <p className="float-right">{persionalInfo.employer}</p>)}
+                            ) : ( <p className="float-right">{personalInfo.employer}</p>)}
                         </div>
                         <div className="w-full py-[13.5px] mb-2">
                             <p className="float-left">Nigeria</p>
@@ -107,7 +105,7 @@ function Profile() {
                                     type="text"
                                     name="phone"
                                     value={contactInfo.phone}
-                                    onChange={handleInputChange}
+                                    onChange={(e) => handleContactInputChange}
                                     className="float-right w-28"
                                 />
                             ) : (<p className="float-right">{contactInfo.phone}</p>)}
@@ -120,7 +118,7 @@ function Profile() {
                                     type="email"
                                     name="email"
                                     value={contactInfo.email}
-                                    onChange={handleInputChange}
+                                    onChange={(e) => handleContactInputChange}
                                     className="float-right w-28"
                                 />
                             ) : (<p className="float-right">{contactInfo.email}</p>)}

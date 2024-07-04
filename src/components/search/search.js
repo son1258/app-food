@@ -1,12 +1,12 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { dataState, fetchDataSelector } from "../../storage";
+import { dataProductState, fetchDataProductSelector } from "../../storage";
 
 function Search() {
     // Get data from API via Recoil
-    const [products, setProducts] = useRecoilState(dataState);
-    const fetchData = useRecoilValue(fetchDataSelector);
+    const [products, setProducts] = useRecoilState(dataProductState);
+    const fetchData = useRecoilValue(fetchDataProductSelector);
     // Find item
     const [searchInput, setSearchInput] = useState('');
     const [filteredResults, setFilteredResults] = useState([]);

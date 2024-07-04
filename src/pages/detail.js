@@ -1,49 +1,50 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { dataState } from "../storage";
-import { fetchDataSelector } from "../storage";
+import { dataProductState } from "../storage";
+import { fetchDataProductSelector } from "../storage";
+import { useLocalStorage } from "../components/useLocalStorage";
 
 function Detail() {
     let { id } = useParams();
     const navigate = useNavigate();
-    const [findItem, setFindItem] = useState([]);
-    const [data, setData] = useRecoilState(dataState);
-    const fetchedData = useRecoilValue(fetchDataSelector);
+    const [findProduct, setFindProduct] = useState([]); 
+    const [data, setData] = useRecoilState(dataProductState);
+    const fetchedData = useRecoilValue(fetchDataProductSelector);
     const [cart, setCart] = useState([]);
+    const {setItem, getItem} = useLocalStorage('cart');
 
     useEffect(() => {
         setData(fetchedData);
     },[fetchedData,setData]);
 
     useEffect(() => {
-        let cartData = localStorage.getItem('cart');
-        cartData = JSON.parse(cartData)
+        let cartData = getItem();
         setCart(cartData);
     }, []);
 
     useEffect(() => {
-        const item = data.find(pro => pro.id == id);
-        setFindItem(item);
+        const product = data.find(product => product.id == id);
+        setFindProduct(product);
     },[])
     
     const addToCart = () => {
-        let newItem = [...cart]
-        const { id, title, image, description, price, rate, count } = findItem;
-        const existingItem = newItem.find(item => item.id == id);
-        if(existingItem){
-            newItem.map(c => {
-                if(c.id === id) {
-                    c.quantity ++
+        let newProduct = [...cart]
+        const { id, title, image, description, price, rate, count } = findProduct;
+        const existingProduct = newProduct.find(product => product.id == id);
+        if(existingProduct){
+            newProduct.map(product => {
+                if(product.id === id) {
+                    product.quantity ++
                 }
             })
-            setCart(newItem)
-            localStorage.setItem('cart',JSON.stringify(newItem))
+            setCart(newProduct)
+            setItem(newProduct);
         } else {
-            const item = { id, title, image, description, price, rate, count, quantity: 1 };
-            newItem.push(item)
-            setCart(newItem)
-            localStorage.setItem('cart',JSON.stringify(newItem))
+            const product = { id, title, image, description, price, rate, count, quantity: 1 };
+            newProduct.push(product)
+            setCart(newProduct)
+            setItem(newProduct);
         }
         navigate('/order');
     };
@@ -55,7 +56,7 @@ function Detail() {
                 </div>
             </div>
             <div className="w-full">
-                <img src={findItem?.image} className="w-full object-cover" alt=""/>
+                <img src={findProduct?.image} className="w-full object-cover" alt=""/>
             </div>
 
 
@@ -88,7 +89,7 @@ function Detail() {
                 </div>
 
                 <div className="mt-[91px] text-[#09051C] text-[27px] ml-[34px] font-[500]">
-                    <p>{findItem?.title}</p>
+                    <p>{findProduct?.title}</p>
                 </div>
 
                 <div className="ml-[34px] mt-[16px]">
@@ -103,19 +104,19 @@ function Detail() {
                                 </linearGradient>
                             </defs>
                         </svg>
-                        <p className="float-left text-[14px] font-[700] text-[#3B3B3B]/30 ml-[10px]">{findItem?.rating?.rate} Rating</p>
+                        <p className="float-left text-[14px] font-[700] text-[#3B3B3B]/30 ml-[10px]">{findProduct?.rating?.rate} Rating</p>
                     </div>
                     <div className="float-left ml-[15px]">
                         <svg className="float-left ml-2" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M17.2411 15.8249L17.241 15.8242L16.4525 5.69575C16.4525 5.6957 16.4525 5.69564 16.4525 5.69559C16.3938 4.91674 15.7475 4.30075 14.9707 4.30075H13.6591C13.5673 2.33087 11.9657 0.75 10.0002 0.75C8.03467 0.75 6.43304 2.33087 6.34125 4.30075H5.02963C4.25308 4.30075 3.60661 4.91642 3.54796 5.69408C3.54795 5.69419 3.54795 5.6943 3.54794 5.69441L2.75922 15.8256L2.75917 15.8262C2.69303 16.7052 2.99182 17.5806 3.58079 18.2288C4.16993 18.8773 5.00564 19.25 5.87506 19.25H14.1252C14.9946 19.25 15.8304 18.8773 16.4195 18.2288L16.2345 18.0607L16.4195 18.2288C17.0085 17.5806 17.3073 16.7052 17.2411 15.8249ZM5.07443 5.85508H6.3371V6.90358C6.3371 7.32822 6.67605 7.68075 7.10422 7.68075C7.53238 7.68075 7.87134 7.32822 7.87134 6.90358V5.85508H12.129V6.90358C12.129 7.32822 12.4679 7.68075 12.8961 7.68075C13.3243 7.68075 13.6632 7.32822 13.6632 6.90358V5.85508H14.9259L15.7114 15.9443C15.7114 15.9444 15.7114 15.9445 15.7114 15.9446C15.7459 16.4037 15.5964 16.8397 15.2907 17.1762C14.9851 17.5125 14.5724 17.6957 14.1252 17.6957H5.8751C5.42788 17.6957 5.01523 17.5125 4.70965 17.1762C4.40394 16.8397 4.25453 16.4037 4.28891 15.9461C4.28891 15.946 4.28892 15.9459 4.28893 15.9458L5.07443 5.85508ZM7.87844 4.30075C7.96779 3.18106 8.88953 2.30434 10.0002 2.30434C11.1108 2.30434 12.0325 3.18109 12.1219 4.30075H7.87844Z" fill="#D61355" stroke="#D61355" stroke-width="0.5" />
                             <path d="M11.6339 9.75617C11.9602 9.4298 12.4894 9.42977 12.8157 9.75617L11.6339 9.75617ZM11.6339 9.75617V9.75617L11.6339 9.75618L9.1952 12.1949L8.36629 11.3659C8.36628 11.3659 8.36628 11.3659 8.36627 11.3659C8.03992 11.0395 7.51073 11.0396 7.18436 11.3659C6.85798 11.6923 6.85798 12.2215 7.18436 12.5478L8.60424 13.9677C8.76735 14.1308 8.98167 14.2126 9.19516 14.2126C9.40856 14.2126 9.62295 14.1309 9.78608 13.9677C9.7861 13.9677 9.78612 13.9677 9.78614 13.9677L12.8157 10.9381C13.1421 10.6117 13.1421 10.0826 12.8158 9.7562L11.6339 9.75617Z" fill="#D61355" stroke="white" stroke-width="0.5" />
                         </svg>
-                        <p className="float-left text-[14px] font-[700] text-[#3B3B3B]/30 ml-2">{findItem?.rating?.count}+ Order</p>
+                        <p className="float-left text-[14px] font-[700] text-[#3B3B3B]/30 ml-2">{findProduct?.rating?.count}+ Order</p>
                     </div>
                 </div>
 
                 <div className="mt-[60px] ml-[37px] mr-[15px] text-[12px] font-[500]">
-                    <p>{findItem?.description}</p>
+                    <p>{findProduct?.description}</p>
                 </div>
 
                 <div className="mx-[25px] mt-6 h-[57px] bg-[#D61355] text-center rounded-lg shadow-[#144E5A33]/20 mb-5" onClick={() => addToCart()}>

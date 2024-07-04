@@ -3,16 +3,16 @@ import { useNavigate } from "react-router-dom";
 
 function Footer() {
     const navigate = useNavigate();
-    const [countItems, setCountItems] = useState([]);
+    const [productInCart, setProductInCart] = useState([]);
     const countItemsInCart = () => {
-        return countItems.length;
+        return productInCart.length;
     }
 
     useEffect(() => {
         let data = localStorage.getItem('cart');
         if(data){
             data = JSON.parse(data);
-            setCountItems(data)
+            setProductInCart(data)
         }
     }, [])
 

@@ -1,12 +1,12 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { dataState, fetchDataSelector } from "../storage";
+import { dataProductState, fetchDataProductSelector } from "../storage";
 import { Product } from "../interfaces/productProp";
 
 function GetData() {
-    const [products, setProducts] = useRecoilState<Product[]>(dataState);
-    const fetchData = useRecoilValue(fetchDataSelector);
+    const [products, setProducts] = useRecoilState<Product[]>(dataProductState);
+    const fetchData = useRecoilValue(fetchDataProductSelector);
     const navigate = useNavigate();
 
     useEffect(() => {

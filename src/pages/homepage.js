@@ -1,58 +1,13 @@
-import React, { useState } from "react";
 import Avatar from "../assets/avatar.jpg";
-import BurgerBanner from "../assets/burger-banner.png";
-import Banner1 from "../assets/banner1.jpg";
-import Banner2 from "../assets/banner3.jpg";
 import { useNavigate } from "react-router-dom";
 import Products from "../components/getData";
 import TypeFood from "../components/typeFood";
 import Popular from "../assets/popularmenu.jpg";
 import Footer from "../components/footer/footer";
+import SlidesBanner from "../components/slidesBanner/slidesBanner";
 
 function Homepage() {
     const navigate = useNavigate();
-    const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
-    const slidesBanner = [
-        <div key={0} className="bg-gradient-to-r from-[#ff1205] to-[#ffb3b3] rounded-[10px] relative overflow-hidden h-[150px]">
-            <div className="ml-[22px] mt-[35px]">
-                <h2 className="text-[16px] text-white font-bold w-[122px]">Special Offer for March</h2>
-                <p className="text-[8px] text-white w-[113.75px]">We are here with the best desserts in town.</p>
-                <button type="submit" className="mb-[21px] bg-white text-[8px] text-red-500 font-bold px-[11px] py-[6.5px] rounded">Buy Now</button>
-            </div>
-            <div className="absolute top-[16px] w-ful h-full right-[-70px]">
-                <img src={BurgerBanner} alt="Burger Banner" className="w-full h-full object-cover" />
-            </div>
-        </div>,
-        <img key={1} src={Banner1} alt="" className="w-full h-[150px] object-cover rounded-[10px]" />,
-        <img key={2} src={Banner2} alt="" className="w-full h-[150px] object-cover rounded-[10px]" />
-    ]
-
-    const handleSwipe = (event) => {
-        const startX = event.touches[0].clientX;
-        let endX;
-
-        const onTouchMove = (e) => {
-            endX = e.touches[0].clientX;
-        };
-
-        const onTouchEnd = () => {
-            if (!endX) return;
-
-            const deltaX = startX - endX;
-
-            if (deltaX > 50) {
-                setCurrentSlideIndex((prev) => (prev === 0 ? slidesBanner.length - 1 : prev - 1));
-            } else if (deltaX < -50) {
-                setCurrentSlideIndex((prev) => (prev === slidesBanner.length - 1 ? 0 : prev + 1));
-            }
-
-            document.removeEventListener("touchmove", onTouchMove);
-            document.removeEventListener("touchend", onTouchEnd);
-        };
-
-        document.addEventListener("touchmove", onTouchMove);
-        document.addEventListener("touchend", onTouchEnd);
-    };
 
     return (
         <div className="sm:hidden sm:w-full sm:font-[Poppins] relative">
@@ -89,7 +44,6 @@ function Homepage() {
                     </div>
                 </div>
             </div>
-
             <div className="mx-8 mt-[17px]">
                 <label class="relative block">
                     <svg className="mt-[10px] w-[17.77px] h-4 absolute left-[30px]" v iewBox="0 0 19 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -103,24 +57,14 @@ function Homepage() {
                             </clipPath>
                         </defs>
                     </svg>
-                    <input type="text" id="search" placeholder="Search" className="pl-[54px] h-9 bg-gradient-to-r from-[#FFF0F0] to-[#FFDFDF] rounded-lg w-full text-[12px]" />
+                    <input type="text" id="search" placeholder="Search" className="pl-[54px] h-9 bg-gradient-to-r from-[#FFF0F0] to-[#FFDFDF] rounded-lg w-full text-[12px] outline-none" />
                 </label>
             </div>
 
-            <div className="mx-[25px] mt-[25px] flex flex-col overflow-hidden" onTouchStart={handleSwipe}>
-                {slidesBanner[currentSlideIndex]}
-            </div>
-            <div className="mt-[15px] flex flex-row justify-center">
-                {slidesBanner.map((_, index) => (
-                    <span
-                        key={index}
-                        onClick={() => setCurrentSlideIndex(index)}
-                        className={`w-[9px] h-[9px] rounded-full mx-1 cursor-pointer ${currentSlideIndex === index ? "bg-[#FF0000]" : "bg-[#E2E2E2]"}`}
-                    />
-                ))}
-            </div>
+            <SlidesBanner />
             <TypeFood />
             <Products />
+
             <div className="mt-2 ml-[30px] mr-[23px]">
                 <div className="float-left">
                     <h2 className="float-left text-[16px]">Popular Meal Menu</h2>
